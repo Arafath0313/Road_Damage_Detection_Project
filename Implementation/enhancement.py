@@ -65,3 +65,4 @@ def denoise_function(input_folder, output_folder="denoised_frames"):
 
     print("Noise reduction completed.")
     return output_folder
+    #next part
