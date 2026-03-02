@@ -37,3 +37,17 @@ def extract_function(video_path, output_folder="frames"):
     cap.release()
     print(f"Extracted {saved_count} frames.")
     return output_folder
+
+
+#  GRAYSCALE FUNCTION
+def gray_convert_function(input_folder, output_folder="gray_frames"):
+    os.makedirs(output_folder, exist_ok=True)
+
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".png"):
+            img = cv2.imread(os.path.join(input_folder, filename))
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            cv2.imwrite(os.path.join(output_folder, filename), gray)
+
+    print("Grayscale conversion completed.")
+    return output_folder
