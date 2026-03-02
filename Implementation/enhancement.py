@@ -37,3 +37,6 @@ def extract_function(video_path, output_folder="frames"):
     cap.release()
     print(f"Extracted {saved_count} frames.")
     return output_folder
+
+
+
