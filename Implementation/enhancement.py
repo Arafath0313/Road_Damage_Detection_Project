@@ -53,6 +53,7 @@ def gray_convert_function(input_folder, output_folder="gray_frames"):
     return output_folder
 
 
+
 #  DENOISING FUNCTION
 def denoise_function(input_folder, output_folder="denoised_frames"):
     os.makedirs(output_folder, exist_ok=True)
