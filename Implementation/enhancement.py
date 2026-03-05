@@ -119,6 +119,61 @@ def calculate_psnr(original_img, processed_img):
     return 10 * np.log10((255.0 ** 2) / mse)
 
 
+# Display function
+def display_function(frame_name,
+                     original_path,
+                     gray_path,
+                     contrast_path,
+                     sharpened_path):
+    
+    original = cv2.imread(os.path.join(original_path, frame_name))
+    original_rgb = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
+
+
+    original_bgr = cv2.imread(os.path.join(original_path, frame_name))
+    original_ref = cv2.cvtColor(original_bgr, cv2.COLOR_BGR2GRAY)
+    
+    gray = cv2.imread(os.path.join(gray_path, frame_name), 0)
+    contrast = cv2.imread(os.path.join(contrast_path, frame_name), 0)
+    sharpened = cv2.imread(os.path.join(sharpened_path, frame_name), 0)
+
+    # Calculate PSNR
+    psnr_gray = calculate_psnr(original_ref, gray)
+    psnr_contrast = calculate_psnr(original_ref, contrast)
+    psnr_sharp = calculate_psnr(original_ref, sharpened)
+
+    print(f"PSNR (Original vs Grayscale): {psnr_gray:.2f} dB")
+    print(f"PSNR (Original vs CLAHE): {psnr_contrast:.2f} dB")
+    print(f"PSNR (Original vs Sharpened): {psnr_sharp:.2f} dB")
+
+    
+    plt.figure(figsize=(14,8))
+
+    plt.subplot(2,2,1)
+    plt.imshow(original_rgb, cmap='gray')
+    plt.title("Original")
+    plt.axis("off")
+
+    plt.subplot(2,2,2)
+    plt.imshow(gray, cmap='gray')
+    plt.title(f"Grayscale\nPSNR: {psnr_gray:.2f} dB")
+    plt.axis("off")
+
+    plt.subplot(2,2,3)
+    plt.imshow(contrast, cmap='gray')
+    plt.title(f"CLAHE\nPSNR: {psnr_contrast:.2f} dB")
+    plt.axis("off")
+
+    plt.subplot(2,2,4)
+    plt.imshow(sharpened, cmap='gray')
+    plt.title(f"Sharpened\nPSNR: {psnr_sharp:.2f} dB")
+    plt.axis("off")
+
+    print("Are original_ref and gray identical?", np.array_equal(original_ref, gray))
+    plt.tight_layout()
+    plt.show()
+
+
 
 
 #  FUNCTION CALLS (PIPELINE)
