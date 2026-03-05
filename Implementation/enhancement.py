@@ -117,3 +117,21 @@ def calculate_psnr(original_img, processed_img):
     if mse == 0:
         return float('inf')
     return 10 * np.log10((255.0 ** 2) / mse)
+
+
+
+
+#  FUNCTION CALLS (PIPELINE)
+video_file = "one.mov"
+
+frames_folder = extract_function(video_file)
+gray_folder = gray_convert_function(frames_folder)
+denoise_folder = denoise_function(gray_folder)
+contrast_folder = contrast_function(denoise_folder)
+sharpen_folder = sharpen_function(contrast_folder)
+
+display_function("frame_0000.jpg",
+                 frames_folder,
+                 gray_folder,
+                 contrast_folder,
+                 sharpen_folder)
