@@ -75,3 +75,16 @@ def denoise_function(input_folder, output_folder="denoised_frames"):
 
 
 #  CONTRAST ENHANCEMENT (CLAHE)
+def contrast_function(input_folder, output_folder="contrast_frames"):
+    os.makedirs(output_folder, exist_ok=True)
+
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".png"):
+            img = cv2.imread(os.path.join(input_folder, filename), 0)
+            enhanced = clahe.apply(img)
+            cv2.imwrite(os.path.join(output_folder, filename), enhanced)
+
+    print("Contrast enhancement completed.")
+    return output_folder
