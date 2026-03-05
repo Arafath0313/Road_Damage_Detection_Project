@@ -88,3 +88,23 @@ def contrast_function(input_folder, output_folder="contrast_frames"):
 
     print("Contrast enhancement completed.")
     return output_folder
+
+
+
+#  SHARPEN FUNCTION
+def sharpen_function(input_folder, output_folder="sharpened_frames"):
+    os.makedirs(output_folder, exist_ok=True)
+
+    kernel = np.array([[0,-1,0],
+                       [-1,5,-1],
+                       [0,-1,0]])
+
+    for filename in os.listdir(input_folder):
+        if filename.endswith(".png"):
+            img = cv2.imread(os.path.join(input_folder, filename), 0)
+            sharpened = cv2.filter2D(img, -1, kernel)
+            cv2.imwrite(os.path.join(output_folder, filename), sharpened)
+
+    print("Sharpening completed.")
+    return output_folder
+
