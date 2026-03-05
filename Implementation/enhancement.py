@@ -3,6 +3,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
 #  EXTRACT FRAMES FUNCTION
 def extract_function(video_path, output_folder="frames"):
     os.makedirs(output_folder, exist_ok=True)
@@ -39,6 +41,8 @@ def extract_function(video_path, output_folder="frames"):
     return output_folder
 
 
+
+
 #  GRAYSCALE FUNCTION
 def gray_convert_function(input_folder, output_folder="gray_frames"):
     os.makedirs(output_folder, exist_ok=True)
@@ -53,6 +57,8 @@ def gray_convert_function(input_folder, output_folder="gray_frames"):
     return output_folder
 
 
+
+
 #  DENOISING FUNCTION
 def denoise_function(input_folder, output_folder="denoised_frames"):
     os.makedirs(output_folder, exist_ok=True)
@@ -65,4 +71,7 @@ def denoise_function(input_folder, output_folder="denoised_frames"):
 
     print("Noise reduction completed.")
     return output_folder
-    #next part
+    
+
+
+#  CONTRAST ENHANCEMENT (CLAHE)
