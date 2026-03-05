@@ -108,3 +108,12 @@ def sharpen_function(input_folder, output_folder="sharpened_frames"):
     print("Sharpening completed.")
     return output_folder
 
+
+# Calculate PSNR
+def calculate_psnr(original_img, processed_img):
+    original = original_img.astype(np.float32)
+    processed = processed_img.astype(np.float32)
+    mse = np.mean((original - processed) ** 2)
+    if mse == 0:
+        return float('inf')
+    return 10 * np.log10((255.0 ** 2) / mse)
