@@ -185,7 +185,7 @@ denoise_folder = denoise_function(gray_folder)
 contrast_folder = contrast_function(denoise_folder)
 sharpen_folder = sharpen_function(contrast_folder)
 
-display_function("frame_0000.jpg",
+display_function("frame_0004.png",
                  frames_folder,
                  gray_folder,
                  contrast_folder,
