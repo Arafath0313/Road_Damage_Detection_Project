@@ -91,21 +91,23 @@ def contrast_function(input_folder, output_folder="contrast_frames"):
 
 
 
-#  SHARPEN FUNCTION
-def sharpen_function(input_folder, output_folder="sharpened_frames"):
+# LAPLACIAN EDGE ENHANCEMENT FUNCTION
+def laplacian_function(input_folder, output_folder="laplacian_frames"):
     os.makedirs(output_folder, exist_ok=True)
-
-    kernel = np.array([[0,-1,0],
-                       [-1,5,-1],
-                       [0,-1,0]])
 
     for filename in os.listdir(input_folder):
         if filename.endswith(".png"):
-            img = cv2.imread(os.path.join(input_folder, filename), 0)
-            sharpened = cv2.filter2D(img, -1, kernel)
-            cv2.imwrite(os.path.join(output_folder, filename), sharpened)
 
-    print("Sharpening completed.")
+            img = cv2.imread(os.path.join(input_folder, filename), 0)
+
+            lap = cv2.Laplacian(img, cv2.CV_64F)
+            lap = cv2.convertScaleAbs(lap)
+
+            enhanced = cv2.add(img, lap)
+
+            cv2.imwrite(os.path.join(output_folder, filename), enhanced)
+
+    print("Laplacian enhancement completed.")
     return output_folder
 
 
@@ -124,33 +126,29 @@ def display_function(frame_name,
                      original_path,
                      gray_path,
                      contrast_path,
-                     sharpened_path):
-    
+                     laplacian_path):
+
     original = cv2.imread(os.path.join(original_path, frame_name))
     original_rgb = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
 
+    original_ref = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
 
-    original_bgr = cv2.imread(os.path.join(original_path, frame_name))
-    original_ref = cv2.cvtColor(original_bgr, cv2.COLOR_BGR2GRAY)
-    
     gray = cv2.imread(os.path.join(gray_path, frame_name), 0)
     contrast = cv2.imread(os.path.join(contrast_path, frame_name), 0)
-    sharpened = cv2.imread(os.path.join(sharpened_path, frame_name), 0)
+    laplacian = cv2.imread(os.path.join(laplacian_path, frame_name), 0)
 
-    # Calculate PSNR
     psnr_gray = calculate_psnr(original_ref, gray)
     psnr_contrast = calculate_psnr(original_ref, contrast)
-    psnr_sharp = calculate_psnr(original_ref, sharpened)
+    psnr_lap = calculate_psnr(original_ref, laplacian)
 
     print(f"PSNR (Original vs Grayscale): {psnr_gray:.2f} dB")
     print(f"PSNR (Original vs CLAHE): {psnr_contrast:.2f} dB")
-    print(f"PSNR (Original vs Sharpened): {psnr_sharp:.2f} dB")
+    print(f"PSNR (Original vs Laplacian): {psnr_lap:.2f} dB")
 
-    
     plt.figure(figsize=(14,8))
 
     plt.subplot(2,2,1)
-    plt.imshow(original_rgb, cmap='gray')
+    plt.imshow(original_rgb)
     plt.title("Original")
     plt.axis("off")
 
@@ -165,11 +163,10 @@ def display_function(frame_name,
     plt.axis("off")
 
     plt.subplot(2,2,4)
-    plt.imshow(sharpened, cmap='gray')
-    plt.title(f"Sharpened\nPSNR: {psnr_sharp:.2f} dB")
+    plt.imshow(laplacian, cmap='gray')
+    plt.title(f"Laplacian\nPSNR: {psnr_lap:.2f} dB")
     plt.axis("off")
 
-    print("Are original_ref and gray identical?", np.array_equal(original_ref, gray))
     plt.tight_layout()
     plt.show()
 
@@ -177,16 +174,16 @@ def display_function(frame_name,
 
 
 #  FUNCTION CALLS (PIPELINE)
-video_file = "one.mov"
+video_file = "crack.mov"
 
 frames_folder = extract_function(video_file)
 gray_folder = gray_convert_function(frames_folder)
 denoise_folder = denoise_function(gray_folder)
 contrast_folder = contrast_function(denoise_folder)
-sharpen_folder = sharpen_function(contrast_folder)
+laplacian_folder = laplacian_function(contrast_folder)
 
-display_function("frame_0004.png",
+display_function("frame_0024.png",
                  frames_folder,
                  gray_folder,
                  contrast_folder,
-                 sharpen_folder)
+                 laplacian_folder)
